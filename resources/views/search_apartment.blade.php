@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="container">
-    <h1>Book a room!</h1>
+    <h1>Make Sale</h1>
+    <p>Post all available information about your item(s) here. Click submit once done.</p>
     {!! Form::open(['action'=>'ApartController@list','method'=>'POST','enctype'=>'multipart/form-data']) !!}
     <div class = "form-group">
         {{Form::label('check_in','Check in date')}}

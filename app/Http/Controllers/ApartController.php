@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\User;
 use App\Apartment;
 
-class ApartmentController extends Controller
+class ApartController extends Controller
 {   
     public function store(Request $request) {
         
@@ -35,7 +36,7 @@ class ApartmentController extends Controller
 
     public function show($id) {
         $apartment = Apartment::find($id);
-        return $apartment;
+        return view('show_apartment')->with('apartment',$apartment);
     }
 
     public function destroy($id)
@@ -48,5 +49,9 @@ class ApartmentController extends Controller
         $sale->delete();
         return 'deleted';
         //return back()->with('success','Item(s) deleted successfully');
+    }
+
+    public function list(Request $request) {
+        
     }
 }

@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Apartment;
+use App\Deal;
 
 class User extends Authenticatable
 {
@@ -27,7 +29,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     public function apartments() {
         return $this->hasMany('App\Apartment');
+    }
+
+    public function dealings() {
+        return $this->hasMany('App\Deal');
     }
 }
