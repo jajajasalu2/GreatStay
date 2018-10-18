@@ -13,6 +13,6 @@ class Apartment extends Model
     protected $cost_per_day = 'cost_per_day';
     protected $o_id = 'o_id';
     public function owner() {
-        return $this->belongsTo('App\User','o_id','id');
+        return $this->belongsTo('App\User','o_id');
     }
 }

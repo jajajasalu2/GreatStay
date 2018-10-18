@@ -12,9 +12,9 @@ class Deal extends Model
     protected $o_id = 'o_id';
     protected $c_id = 'c_id';
     public function owner() {
-        return $this->belongsTo('App\User','o_id','id');
+        return $this->hasOne('App\User','o_id','id');
     }
     public function client() {
-        return $this->belongsTo('App\User','c_id','id');
+        return $this->hasMany('App\User','c_id','id');
     }
 }
