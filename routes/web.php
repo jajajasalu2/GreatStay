@@ -11,6 +11,8 @@
 |
 */
 use Illuminate\Support\Facades\Input;
+use App\Apartment;
+use App\Location;
 
 Auth::routes();
 
@@ -22,7 +24,16 @@ Route::get('/home', function() {
 	return view('home');
 });
 
+Route::any('/search',function() {
+    $query = Input::get('query');
+    $location_id = Location::where('location','LIKE','%'.$query.'%')->get()->id;
+    $count = 0;
+    $apartments = Apartment::where('location_id','=',$location_id);
+    return $apartments;
+});
+
 Route::get('/apartment/{id}','ApartController@show');
+
 Route::post('/apartment_list','ApartController@list');
 
 Route::get('/add_apartment',function() {
@@ -30,3 +41,5 @@ Route::get('/add_apartment',function() {
 });
 
 Route::post('/book_apartment','DealController@store');
+
+Route::post('/post_review','ReviewController@store');

@@ -16,8 +16,9 @@ class OwnerDealApartment extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($d_id)
     {
+        $this->d_id = $d_id;
         //
     }
 
@@ -29,21 +30,7 @@ class OwnerDealApartment extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return ['database'];
     }
 
     /**
@@ -55,7 +42,8 @@ class OwnerDealApartment extends Notification
 
     public function toDatabase($notifiable) {
         return [
-            'A client is looking to book your apartment!'
+            'message' => 'A client is looking to book your apartment!',
+            'd_id' => $this->d_id
         ];
     }
 
