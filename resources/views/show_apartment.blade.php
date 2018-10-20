@@ -9,6 +9,7 @@
                     {{$apartment}}
                 </div>
             </div>
+            <br/>
             <div class="card">
                 <div class="card-body">
                 {!!Form::open(['action'=>'DealController@store','method'=>'POST','enctype'=>'multipart/form-data'])!!}
@@ -25,6 +26,7 @@
                 {!!Form::close()!!}
                 </div>
             </div>
+            <br/>
             <div class="card">
                 <div class="card-body">
                 {!!Form::open(['action'=>'ReviewController@store','method'=>'POST','enctype'=>'multipart/form-data'])!!}
@@ -41,15 +43,16 @@
                 {!!Form::close()!!}
                 </div>
             </div>
+            <br/>
             @if(count($reviews) > 0)
             <div class="card">
-            <div class="card-body">
-            @foreach($reviews as $review)
-                <h5>{{$review->reviewer()->first()->name}}</h5>
-                <p>{{$review->review}}</p>
-                <hr/>
-            @endforeach
-            </div>
+                <div class="card-body">
+                @foreach($reviews as $review)
+                    <p><b>{{$review->reviewer()->first()->name}}</b></p>
+                    <p>{{$review->review}}</p>
+                    <hr/>
+                @endforeach
+                </div>
             </div>
             @endif
         </div>

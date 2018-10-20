@@ -13,23 +13,17 @@ use App\Review;
 
 class ApartController extends Controller
 {   
+
     public function store(Request $request) {
         if (!Auth::check()) {
             return redirect('/home');
         }
         $this->validate($request,['addr'=>'required','bhk'=>'required',
                                 'cost_per_day'=>'required','image'=>'required',
-                                'images'=>'required']);
+                                'images'=>'required','documents'=>'required']);
         $images = $request->file('images');
-        for ($i = 0;$i<count($images);$i++) {
-            $fileNameWithExt = $images[$i]->getClientOriginalName();
-            $filename = pathinfo($fileNameWithExt,PATHINFO_FILENAME);
-            $extension = $images[$i]->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $path = $images[$i]->storeAs('public/images',$fileNameToStore);
-            DB::table('apartment_image')->insert();
-        }
         $o_id = auth()->id();
+        $current_apartment_id = Apartment::all()->last()->id + 1;
         $apartment = new Apartment;
         $apartment->bhk = $request->input('bhk');
         $apartment->addr = $request->input('addr');
@@ -37,7 +31,33 @@ class ApartController extends Controller
         $apartment->o_id = $o_id;
         $apartment->image = $fileNameToStore;
         $apartment->save();
-        return back();
+        for ($i = 0;$i<count($images);$i++) {
+            $fileNameWithExt = $images[$i]->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt,PATHINFO_FILENAME);
+            $extension = $images[$i]->getClientOriginalExtension();
+            $fileNameToStore = $current_apartment_id
+                                .'_img'
+                                .'_'.$filename
+                                .'_'.time()
+                                .'.'.$extension;
+            $path = $images[$i]->storeAs('public/images',$fileNameToStore);
+            DB::insert('insert into apartment_images(a_id,name) values(?,?)',
+            [$current_apartment_id,$fileNameToStore]);
+        }
+        for ($i = 0;$i<count($documents);$i++) {
+            $fileNameWithExt = $documents[$i]->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt,PATHINFO_FILENAME);
+            $extension = $documents[$i]->getClientOriginalExtension();
+            $fileNameToStore = $current_apartment_id
+                                .'_doc'
+                                .'_'.$filename
+                                .'_'.time()
+                                .'.'.$extension;
+            $path = $documents[$i]->storeAs('public/images',$fileNameToStore);
+            DB::insert('insert into apartment_documents(a_id,name) values(?,?)',
+            [$current_apartment_id,$fileNameToStore]);
+        }
+        return redirect('/');
     }
 
     public function show($id) {
