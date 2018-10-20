@@ -8,8 +8,8 @@
                 <div class="card-body">
                 {!!Form::open(['action'=>'ApartController@store','method'=>'POST','enctype'=>'multipart/form-data'])!!}
                     <div class="form-group">
-                         {{Form::label('address','Official Address')}}
-                         {{Form::textarea('address','',['class'=>'form_control'])}}
+                         {{Form::label('addr','Official Address')}}
+                         {{Form::textarea('addr','',['class'=>'form_control'])}}
                     </div>
                     <div class="form-group">
                         <label for="location_id">Location</label>

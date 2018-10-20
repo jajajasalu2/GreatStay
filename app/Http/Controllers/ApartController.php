@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use Auth;
 use Carbon\Carbon;
 use Session;
 use Illuminate\Database\Eloquent\Model;
@@ -19,17 +21,23 @@ class ApartController extends Controller
             return redirect('/home');
         }
         $this->validate($request,['addr'=>'required','bhk'=>'required',
-                                'cost_per_day'=>'required','image'=>'required',
+                                'cost_per_day'=>'required',
+                                'description'=>'required',
+                                'location_id'=>'required',
                                 'images'=>'required','documents'=>'required']);
         $images = $request->file('images');
+        $documents = $request->file('documents');
         $o_id = auth()->id();
         $current_apartment_id = Apartment::all()->last()->id + 1;
         $apartment = new Apartment;
+        $apartment->id = $current_apartment_id;
         $apartment->bhk = $request->input('bhk');
         $apartment->addr = $request->input('addr');
         $apartment->cost_per_day = $request->input('cost_per_day');
         $apartment->o_id = $o_id;
-        $apartment->image = $fileNameToStore;
+        $apartment->location_id = $request->input('location_id');
+        $apartment->verified = 0;
+        $apartment->description = $request->input('description');
         $apartment->save();
         for ($i = 0;$i<count($images);$i++) {
             $fileNameWithExt = $images[$i]->getClientOriginalName();
