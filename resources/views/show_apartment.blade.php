@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-group">
                          {{Form::label('review','Review')}}
-                         {{Form::textarea('',$check_out,['class'=>'form_control'])}}
+                         {{Form::textarea('review','',['class'=>'form_control'])}}
                     </div>
                 {{Form::submit('Post',['class'=>'btn btn-primary'])}}
                 {!!Form::close()!!}
@@ -43,11 +43,15 @@
             </div>
             @if(count($reviews) > 0)
             <div class="card">
+            <div class="card-body">
             @foreach($reviews as $review)
+                <h5>{{$review->reviewer()->first()->name}}</h5>
+                <p>{{$review->review}}</p>
                 <hr/>
-                <p></p>
-            @endif
+            @endforeach
             </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>

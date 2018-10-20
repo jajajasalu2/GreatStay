@@ -24,11 +24,18 @@ Route::get('/home', function() {
 	return view('home');
 });
 
+Route::get('/protected', ['middleware' => ['auth', 'admin'], function() {
+    return "this page requires that you be logged in and an Admin";
+}]);
+
 Route::any('/search',function() {
     $query = Input::get('query');
-    $location_id = Location::where('location','LIKE','%'.$query.'%')->get()->id;
-    $count = 0;
-    $apartments = Apartment::where('location_id','=',$location_id);
+    $location = Location::where('location','LIKE','%'.$query.'%')->first();
+    if (is_null($location)) {
+        return "It seems there are no rooms available in this location.";
+    }
+    $location_id = $location->id;
+    $apartments = Apartment::where('location_id','=',$location_id)->get();
     return $apartments;
 });
 
@@ -37,8 +44,11 @@ Route::get('/apartment/{id}','ApartController@show');
 Route::post('/apartment_list','ApartController@list');
 
 Route::get('/add_apartment',function() {
-    return view('add_apartment');
+    $locations = Location::all();
+    return view('add_apartment')->with('locations',$locations);
 });
+
+Route::post('/submit_apartment','ApartController@store');
 
 Route::post('/book_apartment','DealController@store');
 

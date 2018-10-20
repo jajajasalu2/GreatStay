@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 use App\Deal;
 use App\Review;
 
 class ReviewController extends Controller
 {
     public function store(Request $request) {
-        $this->validate($request,['a_id'=>'required','review'=>'required'])
+        if (!Auth::check()) {
+            return back();
+        }
+        $this->validate($request,['a_id'=>'required','review'=>'required']);
         $deals = new Deal;
         $reviewer = auth()->user();
         $deals = Deal::where('a_id','=',$request->input('a_id'))
-                    ->where('c_id','=',$reviewer->id);
+                    ->where('c_id','=',$reviewer->id)->get();
         if (count($deals) == 0) {
             return "You haven't ever booked this apartment before!";
         }

@@ -37,4 +37,8 @@ class User extends Authenticatable
     public function dealings() {
         return $this->hasMany('App\Deal');
     }
+
+    public function isAdmin() {
+        return $this->admin;
+    }
 }

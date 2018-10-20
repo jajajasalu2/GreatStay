@@ -9,22 +9,25 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Deal;
 use App\Apartment;
+use App\Review;
 
 class ApartController extends Controller
 {   
     public function store(Request $request) {
-        
-        $this->validate($request,['addr'=>'required','bhk'=>'required',
-                                'cost_per_day'=>'required','image'=>'required']);
-        if($request->hasFile('image')) {
-            $fileNameWithExt = $request->file('image')->getClientOriginalName();
-            $filename = pathinfo($fileNameWithExt,PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $path = $request->file('image')->storeAs('public/images',$fileNameToStore);
+        if (!Auth::check()) {
+            return redirect('/home');
         }
-        else {
-            $fileNameToStore = 'noimage.jpeg';
+        $this->validate($request,['addr'=>'required','bhk'=>'required',
+                                'cost_per_day'=>'required','image'=>'required',
+                                'images'=>'required']);
+        $images = $request->file('images');
+        for ($i = 0;$i<count($images);$i++) {
+            $fileNameWithExt = $images[$i]->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt,PATHINFO_FILENAME);
+            $extension = $images[$i]->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $images[$i]->storeAs('public/images',$fileNameToStore);
+            DB::table('apartment_image')->insert();
         }
         $o_id = auth()->id();
         $apartment = new Apartment;
@@ -34,7 +37,7 @@ class ApartController extends Controller
         $apartment->o_id = $o_id;
         $apartment->image = $fileNameToStore;
         $apartment->save();
-        return 1;
+        return back();
     }
 
     public function show($id) {
@@ -51,9 +54,11 @@ class ApartController extends Controller
         else {
             $check_out = Carbon::now();
         }
+        $reviews = Review::where('a_id','=',$apartment->id)->get();
         return view('show_apartment')->with('apartment',$apartment)
                                     ->with('check_in',$check_in)
-                                    ->with('check_out',$check_out);
+                                    ->with('check_out',$check_out)
+                                    ->with('reviews',$reviews);
     }
 
     public function destroy($id) {
@@ -73,14 +78,27 @@ class ApartController extends Controller
         $viable_apartments = array();
         $deals = new Deal;
         $deals = Deal::all();
+        $check_in_input = $request->input('check_in');
+        $check_out_input = $request->input('check_out');
+        
         foreach ($apartments as $apartment) {
             $apartment_id = $apartment->id;	
             $flag = 0;
             foreach ($deals as $deal) {
                 $deal_apart_id = $deal->a_id;
                 if ($apartment_id == $deal_apart_id) {
-                    $flag = 1;
-                    break;
+                    $check_in_booking = $deal->check_in;
+                    $check_out_booking = $deal->check_out;
+                    $difference1 = strtotime($check_in_input) - strtotime($check_out_booking);
+                    $difference2 = strtotime($check_in_input) - strtotime($check_in_booking);
+                    $difference3 = strtotime($check_out_input) - strtotime($check_out_booking);
+                    $difference4 = strtotime($check_out_input) - strtotime($check_in_booking);
+                    if (($difference4 > 0 && $difference3 < 0) || 
+                    ($difference1 < 0 && $difference2 > 0) || 
+                    ($difference3 > 0 && $difference2 < 0) || ($difference2>0 && $difference3<0)) {
+                        $flag = 1;
+                        break;
+                    }
                 }
             }
             if ($flag == 0) {
