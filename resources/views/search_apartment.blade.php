@@ -1,22 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@include('search_card')
 <div class="container">
-    <h1>Book a room!</h1>
-	{!! Form::open(['action'=>'ApartController@list','method'=>'POST','enctype'=>'multipart/form-data']) !!}
-    <div class = "form-group">
-        {{Form::label('check_in','Check in date')}}
-        {{Form::date('check_in',\Carbon\Carbon::now(),['class'=>'form-control'])}}
-    </div>
-    <div class = "form-group">
-        {{Form::label('check_out','Check out date')}}
-        {{Form::date('check_out',\Carbon\Carbon::now(),['class'=>'form-control'])}}
-    </div>
-    <div class = "form-group">
-        {{Form::label('location','Additional Information(optional)')}}
-        {{Form::select('location',[1=>'Mumbai',2=>'Bangkok',3=>'Singapore'],['class'=>'form-control'])}}
-    </div>
-    {{Form::submit('Show available rooms',['class'=>'btn btn-primary'])}}
-    {!! Form::close() !!}
+@foreach ($apartments as $apartment)
+	<div class="pull-right">
+	<h4>{{$apartment->bhk}} BHK</h4>
+	<p><b>{{$apartment->location()}}</b></p>
+	</div>
+	@if(!empty($apartment->images()))
+	<img src="/storage/images/{{$apartment->images()[0]}}" class="pull-right" width='10%' height='10%'>
+	@endif
+	<hr/>
+@endforeach
 </div>
 @endsection

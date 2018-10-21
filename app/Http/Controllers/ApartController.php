@@ -138,7 +138,7 @@ class ApartController extends Controller
         }
         session(['check_in' => $request->input('check_in')]);
         session(['check_out' => $request->input('check_out')]);
-        return $viable_apartments;
+        return view('search_apartment')->with('apartments',$viable_apartments);
     }
 
     public function verify($id) {

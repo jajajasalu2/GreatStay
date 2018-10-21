@@ -11,12 +11,13 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                     <li>
-                        <form action="/search" method="POST" role="search" class="navbar-form navbar-left">
+                        <form action="/search" method="POST" role="search" class="navbar-form">
                             {{csrf_field()}}
-                            <div class="form-group">
-                            <input type="text" class="form-control" name="query" placeholder="Search here">                
-                            </div>
+                            <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Search here"> 
+                            <div class="input-group-btn">
                             <button type="submit" class="btn btn-default">Search</button>
+                            </div></div>
                         </form>
                         </li>
                     </ul>

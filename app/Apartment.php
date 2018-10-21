@@ -4,15 +4,24 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use DB;
 
 class Apartment extends Model
 {
     protected $table = 'apartment';
-    protected $a_id = 'id';
-    protected $bhk = 'BHK';
-    protected $cost_per_day = 'cost_per_day';
     protected $o_id = 'o_id';
     public function owner() {
         return $this->belongsTo('App\User','o_id');
+    }
+    public function location() {
+        return DB::select('select location from locations where id = ?',[$this->location_id])[0]->location;
+    }
+    public function images() {
+        $result = DB::select('select name from apartment_images where a_id = ?',[$this->id]);	
+        $images = [];
+        for ($i = 0;$i<count($result);$i++) {
+            array_push($images,$result[$i]->name);
+        }
+        return $images;
     }
 }
