@@ -140,42 +140,42 @@ class ApartController extends Controller
 		    if (ApartController::isAvailable($check_in_input,$check_out_input,$apartment_id)) {
 				array_push($viable_apartments,$apartment);
 			}
-        }
+       		}
 		return $viable_apartments;
 	}
 
     public function list(Request $request) {
-		if ($request->input('query') !== NULL) {
-			$query = $request->input('query');
-			$location_obj = Location::where('location','LIKE','%'.$query.'%')->first();
-			if (is_null($location_obj)) {
-				return back()->with('error','It seems there are no rooms in this location. Try something else!');
-			}
-			$location = $location_obj->id;
+	if ($request->input('query') !== NULL) {
+		$query = $request->input('query');
+		$location_obj = Location::where('location','LIKE','%'.$query.'%')->first();
+		if (is_null($location_obj)) {
+			return back()->with('error','It seems there are no rooms in this location. Try something else!');
 		}
-		else {
-			$location = $request->input('location');
-		}
-		if ($request->input('check_in') !== NULL) {
-			$check_in_input = $request->input('check_in');
-		}
-		else  {
-			$check_in_input = Carbon::now();
-		}
-		if ($request->input('check_out') !== NULL) {
-			$check_out_input = $request->input('check_out');
-		}
-		else  {
-			$check_out_input = Carbon::now();
-		}
-		if (strtotime($check_out_input) < strtotime($check_in_input)) {
-			$temp = $check_out_input;
-			$check_out_input = $check_in_input;
-			$check_in_input = $temp;
-		}
+		$location = $location_obj->id;
+	}
+	else {
+		$location = $request->input('location');
+	}
+	if ($request->input('check_in') !== NULL) {
+		$check_in_input = $request->input('check_in');
+	}
+	else  {
+		$check_in_input = Carbon::now();
+	}
+	if ($request->input('check_out') !== NULL) {
+		$check_out_input = $request->input('check_out');
+	}
+	else  {
+		$check_out_input = Carbon::now();
+	}
+	if (strtotime($check_out_input) < strtotime($check_in_input)) {
+		$temp = $check_out_input;
+		$check_out_input = $check_in_input;
+		$check_in_input = $temp;
+	}
     	$viable_apartments = ApartController::viable_apartment_list($check_in_input,$check_out_input,$location);  
-		$check_in = ApartController::check_session('check_in',Carbon::now());
-		$check_out = ApartController::check_session('check_out',Carbon::now());
+	$check_in = ApartController::check_session('check_in',Carbon::now());
+	$check_out = ApartController::check_session('check_out',Carbon::now());
         session(['check_in' => $request->input('check_in')]);
         session(['check_out' => $request->input('check_out')]);
         return view('search_apartment')->with('apartments',$viable_apartments)
@@ -184,9 +184,9 @@ class ApartController extends Controller
     }
 
     public function verify($id) {
-        $apartment = Apartment::where('id','=',$id)->get();
+        $apartment = Apartment::where('id','=',$id)->first();
         $apartment->verified = 1;
         $apartment->save();
-        return back();
+        return back()->with('success','Verified');
     }
 }

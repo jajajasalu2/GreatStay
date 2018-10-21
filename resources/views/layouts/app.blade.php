@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/sushant_style.css')}}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -29,6 +30,10 @@
         @yield('content')
         </main>
     </div>
+    <footer class="navbar-fixed-bottom">
+      <p>Great Stay, Copyright &copy; 2018</p>
+    </footer>
 </body>
+
 </html>
 

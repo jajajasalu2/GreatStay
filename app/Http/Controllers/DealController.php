@@ -41,29 +41,29 @@ class DealController extends Controller
 	}	
 
     public function store(Request $request) {
-		if (!Auth::check()) {
-			return back()->with('error','It seems you\'re not logged in!');
-		}
+	if (!Auth::check()) {
+		return back()->with('error','It seems you\'re not logged in!');
+	}
         $this->validate($request,['a_id'=>'required','check_in'=>'required','check_out'=>'required']);
         $deal = new Deal;
         $client_id = auth()->id();
         $apartment = Apartment::find($request->input('a_id'));
-		$check_in = $request->input('check_in');
-		$check_out = $request->input('check_out');
-		if (strtotime($check_out) > strtotime($check_in)) {
-			$temp = $check_in;
-			$check_in = $check_out;
-			$check_out = $temp;
-		}
-		if (strtotime($check_in) < strtotime(Carbon::now()) || strtotime($check_out) < strtotime(Carbon::now())) {
-			return back()->with('error','Can\'t book on this date :(');
-		}
-		if (!DealController::isAvailable($check_in,$check_out,$apartment->id)) {
-			return back()->with('error','Can\'t book on this date :(');
-		}
-		if (DealController::bookedMoreThanOnce($check_in,$check_out,$apartment->id,auth()->id())) {
-			return back()->with('error','Already booked this room');
-		}
+	$check_in = $request->input('check_in');
+	$check_out = $request->input('check_out');
+	if (strtotime($check_out) < strtotime($check_in)) {
+		$temp = $check_in;
+		$check_in = $check_out;
+		$check_out = $temp;
+	}
+	if (strtotime($check_in) < strtotime(Carbon::now()) || strtotime($check_out) < strtotime(Carbon::now())) {
+		return back()->with('error','Can\'t book on this date :(');
+	}
+	if (!DealController::isAvailable($check_in,$check_out,$apartment->id)) {
+		return back()->with('error','Can\'t book on this date :(');
+	}
+	if (DealController::bookedMoreThanOnce($check_in,$check_out,$apartment->id,auth()->id())) {
+		return back()->with('error','Already booked this room');
+	}
         $owner_id = $apartment->owner()->first()->id;
         $deal->a_id = $request->input('a_id');
         $deal->o_id = $owner_id;
