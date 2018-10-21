@@ -8,9 +8,11 @@
             
             <div class="card">
                 <div class="card-body">
-                <div id = "carousel-outer-container" class="container">
-       
-                </div>
+                <section id = "slider">
+                @foreach($images as $image)
+                <img src="/storage/images/{{$image->name}}" width='50%'/>
+                @endforeach
+                </section>
 		<h6><b>{{$apartment->bhk}} BHK</b></h6>
 		<p>Host: {{$apartment->owner()->first()->name}}</p>
 		<p>{{$apartment->description}}<p>
@@ -67,30 +69,5 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script> 
-$(document).ready(function() { 
-	var i = 0;
-	$("#carousel-outer-container").append("<div id='myCarousel' class='carousel slide' data-ride='carousel'></div>");
-    $("#myCarousel").append("<ol class='carousel-indicators'></ol>");
-	$('#myCarousel').append("<a class='left carousel-control' href='#myCarousel' data-slide='prev'>      <span class='glyphicon glyphicon-chevron-left'></span>      <span class='sr-only'>Previous</span>    </a>    <a class='right carousel-control' href='#myCarousel' data-slide='next'>      <span class='glyphicon glyphicon-chevron-right'></span>      <span class='sr-only'>Next</span>    </a>");
-	$("#myCarousel").append("<div class=carousel-inner></div>");
-	@foreach ($images as $image)
-    if (i != 0) {
-        $(".carousel-indicators").append("<li data-target='#myCarousel' data-slide-to='"+ i +"' class='active'></li>")
-    }	
-    else {
-        $(".carousel-indicators").append("<li data-target='#myCarousel' data-slide-to='"+ i +"'></li>")
-    }
-    i++;
-	@endforeach
-	@foreach ($images as $image)
-        if (i != 0) {
-            $(".carousel-inner").append("<div class='item'><img src='/storage/images/{{$image->name}}' width='50%'></div>");
-        }
-        else {
-            $(".carousel-inner").append("<div class='item active'><img src='/storage/images/{{$image->name}}' width='50%'></div>");
-        }
-	@endforeach
-});
-</script>
+<script src="{{ asset('js/jquery.cycle.all.js') }}"></script>
 @endsection

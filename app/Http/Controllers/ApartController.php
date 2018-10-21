@@ -82,7 +82,7 @@ class ApartController extends Controller
 
     public function show($id) {
         $apartment = Apartment::find($id);
-	if (!$apartment->verified) {
+    if (!$apartment->verified) {
 		return redirect('/')->with('error','Permission denied');
 	}
 	$check_in = ApartController::check_session('check_in',Carbon::now());
@@ -93,7 +93,7 @@ class ApartController extends Controller
                                     ->with('check_in',$check_in)
                                     ->with('check_out',$check_out)
                                     ->with('reviews',$reviews)
-				    ->with('images',$images);
+				                    ->with('images',$images);
     }
 
     public function destroy($id) {
