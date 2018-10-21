@@ -11,14 +11,14 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                     <li>
-                        <form action="/search" method="POST" role="search" class="navbar-form">
+			{!!Form::open(['action'=>'ApartController@list','method'=>'POST','enctype'=>'multipart/form-data','role'=>'search'])!!}
                             {{csrf_field()}}
                             <div class="input-group">
                             <input type="text" class="form-control" name="query" placeholder="Search here"> 
                             <div class="input-group-btn">
                             <button type="submit" class="btn btn-default">Search</button>
                             </div></div>
-                        </form>
+			{!!Form::close()!!}
                         </li>
                     </ul>
 
@@ -41,9 +41,6 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">
-                                        Notifications <span class="caret">{{count(auth()->user()->unreadNotifications)}}</span>
-                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

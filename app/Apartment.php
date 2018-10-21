@@ -24,4 +24,13 @@ class Apartment extends Model
         }
         return $images;
     }
+
+    public function documents() {
+        $result = DB::select('select name from apartment_documents where a_id = ?',[$this->id]);	
+        $documents = [];
+        for ($i = 0;$i<count($result);$i++) {
+            array_push($documents,$result[$i]->name);
+        }
+        return $documents;
+    }
 }
