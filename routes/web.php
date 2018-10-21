@@ -50,6 +50,8 @@ Route::get('/add_apartment',function() {
 
 Route::post('/submit_apartment','ApartController@store');
 
+Route::get('/verify_apartment/{id}',['middleware' => ['auth','admin'],'ApartController@verify']);
+
 Route::post('/book_apartment','DealController@store');
 
 Route::post('/post_review','ReviewController@store');

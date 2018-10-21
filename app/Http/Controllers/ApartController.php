@@ -83,10 +83,12 @@ class ApartController extends Controller
             $check_out = Carbon::now();
         }
         $reviews = Review::where('a_id','=',$apartment->id)->get();
+	$images = DB::select('select name from apartment_images where a_id = ?',[$apartment->id]);
         return view('show_apartment')->with('apartment',$apartment)
                                     ->with('check_in',$check_in)
                                     ->with('check_out',$check_out)
-                                    ->with('reviews',$reviews);
+                                    ->with('reviews',$reviews)
+				    ->with('images',$images);
     }
 
     public function destroy($id) {
@@ -122,8 +124,9 @@ class ApartController extends Controller
                     $difference3 = strtotime($check_out_input) - strtotime($check_out_booking);
                     $difference4 = strtotime($check_out_input) - strtotime($check_in_booking);
                     if (($difference4 > 0 && $difference3 < 0) || 
-                    ($difference1 < 0 && $difference2 > 0) || 
-                    ($difference3 > 0 && $difference2 < 0) || ($difference2>0 && $difference3<0)) {
+                        ($difference1 < 0 && $difference2 > 0) || 
+                        ($difference3 > 0 && $difference2 < 0) || 
+                        ($difference2 > 0 && $difference3 < 0)) {
                         $flag = 1;
                         break;
                     }
@@ -136,5 +139,12 @@ class ApartController extends Controller
         session(['check_in' => $request->input('check_in')]);
         session(['check_out' => $request->input('check_out')]);
         return $viable_apartments;
+    }
+
+    public function verify($id) {
+        $apartment = Apartment::where('id','=',$id)->get();
+        $apartment->verified = 1;
+        $apartment->save();
+        return back();
     }
 }
