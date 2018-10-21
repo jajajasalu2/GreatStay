@@ -69,5 +69,16 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="{{ asset('js/jquery.cycle.all.js') }}"></script>
+<script src="{{ asset('js/jquery.cycle.all.js') }}">
+</script>
+<script>
+$(document).ready(function()
+{
+    if ($("#slider img").length == 1) {
+        $("#slider img").clone().appendTo($("#slider"))
+    }
+	$('#slider').cycle('scrollUp');
+}
+);
+</script>
 @endsection
