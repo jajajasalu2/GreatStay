@@ -40,7 +40,12 @@ class ApartController extends Controller
         $images = $request->file('images');
         $documents = $request->file('documents');
         $o_id = auth()->id();
-        $current_apartment_id = Apartment::all()->last()->id + 1;
+		$all_aps = Apartment::all()->last();
+		if (is_null($all_aps)) {
+			$current_apartment_id = 0;
+		}
+		else
+		{        $current_apartment_id = $all_aps->id + 1;}
         $apartment = new Apartment;
         $apartment->id = $current_apartment_id;
         $apartment->bhk = $request->input('bhk');
@@ -93,7 +98,8 @@ class ApartController extends Controller
                                     ->with('check_in',$check_in)
                                     ->with('check_out',$check_out)
                                     ->with('reviews',$reviews)
-				                    ->with('images',$images);
+				                    ->with('images',$images)
+                                    ->with('background_image',$images[0]);
     }
 
     public function destroy($id) {

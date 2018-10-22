@@ -18,9 +18,28 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/sushant_style.css')}}" rel="stylesheet">
+    <style>
+        body {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    height: 100%;
+}
+body:before {
+    content: "";
+    position: absolute;
+    background: url("/images/house3.jpg");
+    background-size: cover;
+    z-index: -1; /* Keep the background behind the content */
+    height: 20%; width: 20%; /* Using Glen Maddern's trick /via @mente */
+
+    /* don't forget to use the prefixes you need */
+    transform: scale(5);
+    transform-origin: top left;
+    filter: blur(2px);
+}
+</style>
 </head>
-<body>
+<body background="">
     <div id="app">
 	@include('inc.navbar')
         <div class="container">
@@ -30,9 +49,6 @@
         @yield('content')
         </main>
     </div>
-    <footer class="navbar-fixed-bottom">
-      <p>Great Stay, Copyright &copy; 2018</p>
-    </footer>
 </body>
 
 </html>

@@ -55,7 +55,7 @@ class DealController extends Controller
 		$check_in = $check_out;
 		$check_out = $temp;
 	}
-	if (strtotime($check_in) < strtotime(Carbon::now()) || strtotime($check_out) < strtotime(Carbon::now())) {
+	if (strtotime($check_out) < strtotime(Carbon::now())) {
 		return back()->with('error','Can\'t book on this date :(');
 	}
 	if (!DealController::isAvailable($check_in,$check_out,$apartment->id)) {

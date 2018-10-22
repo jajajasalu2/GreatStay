@@ -16,6 +16,7 @@
 		<h6><b>{{$apartment->bhk}} BHK</b></h6>
 		<p>Host: {{$apartment->owner()->first()->name}}</p>
 		<p>{{$apartment->description}}<p>
+        <p>Address: {{$apartment->addr}}</p>
 		<p>Cost per day:<b> {{$apartment->cost_per_day}} </b></p>
                 </div>
             </div>

@@ -4,6 +4,7 @@
 <div class="container">
 @foreach ($apartments as $apartment)
 	<div class="row">
+		<div class="card"><div class="card-body">
 		<div class="col-md-8">
 			<a href="/documents/{{$apartment->id}}"><button class="btn btn-default">Documentation</button></a>
 			<a href="/verify_apartment/{{$apartment->id}}"><button class="btn btn-submit">Verify</button></a>
@@ -14,6 +15,7 @@
 			<img src="/storage/images/{{$apartment->images()[0]}}" width='50%'>
 			@endif
 		</div>
+	</div></div>
 	</div>
 	<hr/>
 @endforeach
